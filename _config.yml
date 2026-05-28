@@ -23,3 +23,5 @@ plugins:
   - jekyll-seo-tag
   - jektex
   - jekyll-feed
+
+google-analytics: G-3GLS5XRWV6
