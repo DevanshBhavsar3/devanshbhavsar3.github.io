@@ -1,0 +1,25 @@
+title: Devansh Bhavsar
+author: Devansh Bhavsar
+email: devansh3bhavsar@example.com
+description: >-
+  Exploring the world of systems architecture, backend engineering and performance. 
+  Read deep dives, project breakdowns, and technical insights.
+baseurl: ""
+url: "https://devansh.engineer"
+twitter_username: CluxOP
+github_username:  DevanshBhavsar3
+
+permalink: /:slug.html
+remote_theme: riggraz/no-style-please
+
+theme_config:
+  appearance: "auto"
+  back_home_text: ".."
+  date_format: "%d-%m-%Y"
+  show_description: false
+  lowercase_titles: true
+
+plugins:
+  - jekyll-seo-tag
+  - jektex
+  - jekyll-feed

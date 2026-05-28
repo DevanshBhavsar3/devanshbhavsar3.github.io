@@ -1,0 +1,17 @@
+entries:
+  - title: Socials
+    entries:
+      - title: Website
+        url: https://devansh.engineer
+      - title: GitHub
+        url: https://github.com/DevanshBhavsar3
+      - title: X (Twitter)
+        url: https://x.com/@CluxOP
+      - title: LinkedIn
+        url: https://www.linkedin.com/in/devansh3bhavsar
+
+  - title: Blogs
+    post_list: true
+
+  - title: RSS
+    url: feed.xml
