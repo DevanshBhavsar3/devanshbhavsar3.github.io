@@ -24,7 +24,7 @@ categories: distriubuted-systems architecture paper
 
 # Abstract
 
-This blog covers fundamental and important topics related to The Google File System paper published in 2004. I will try to cover everything from the ground up.
+This blog covers fundamental and important topics related to The Google File System paper published in 2003. I will try to cover everything from the ground up.
 
 You don't need to have any prerequisite knowledge to understand the blog itself, but some coffee and motivation is appreciated.
 
@@ -109,22 +109,16 @@ Recovering from a long Operation Log is redundant and slow. So, the master creat
 This section contains information on how GFS client interacts with the filesystem for operations like read, append, write & delete.
 ### Reads
 
-1. When the application want to read for a specific byte offset from a file, the GFS client translates the byte offset into a chunk index (1) and send the request to GFS master.
-
-$$
+1. When the application want to read for a specific byte offset from a file, the GFS client translates the byte offset into a chunk index (1) and send the request to GFS master. $$
 \begin{equation}
 \text{Chunk Index} = \frac{\text{Byte Offset}}{Chunk Size}
 \tag{1}
 \end{equation}
 $$
 
-2. GFS Master responds with a chunk handle (64 bit unique identifier) and locations of the chunk replicas.
+2. GFS Master responds with a chunk handle (64 bit unique identifier) and locations of the chunk replicas. ![Master's Response to Read](/assets/gfs/master-read-response.png)
 
-![Master's Response to Read](/assets/gfs/master-read-response.png)
-
-3. GFS client caches this response for some period of time to save a round-trip from fetching the same metadata again. With the location of the chunk replicas, client can now make request to any one replica with chunk handle and byte range to read from that chunk. 
-
-![GFS Client Requests Read](/assets/gfs/client-read-request.png)
+3. GFS client caches this response for some period of time to save a round-trip from fetching the same metadata again. With the location of the chunk replicas, client can now make request to any one replica with chunk handle and byte range to read from that chunk. ![GFS Client Requests Read](/assets/gfs/client-read-request.png)
 
 For every subsequent request to the same chunk, client don't need to request the master for replica locations. Instead, it can use the client cache.
 
@@ -136,17 +130,11 @@ When a GFS client wants to write to a particular chunk, the chunk needs to be le
 
 Let's take a look at how a typical write operations is performed,
 
-1. GFS client requests the master for writing to a file with the filename and its chunk index (1). The master returns the primary and other replica (secondary) locations, if a replica already holds a lease for that chunk, otherwise the master grants one replica a lease.
+1. GFS client requests the master for writing to a file with the filename and its chunk index (1). The master returns the primary and other replica (secondary) locations, if a replica already holds a lease for that chunk, otherwise the master grants one replica a lease. ![GFS Client Requests Write](/assets/gfs/client-write-request.png)
 
-![GFS Client Requests Write](/assets/gfs/client-write-request.png)
+2. GFS client pushes the new data to all the chunk replicas, and the chunkserver holding the replica stores the data in its LRU buffer and returns acknowledgement to the client. The data is still **not** written to the disk. ![GFS Client Pushes Data to Replicas](/assets/gfs/client-push-data-to-replica.png)
 
-2. GFS client pushes the new data to all the chunk replicas, and the chunkserver holding the replica stores the data in its LRU buffer and returns acknowledgement to the client. The data is still **not** written to the disk.
-
-![GFS Client Pushes Data to Replicas](/assets/gfs/client-push-data-to-replica.png)
-
-3. A write request to the primary replica is sent. The primary replica creates a serialized order of mutation which is called **Mutation Order**. It applies the mutation on its disk according to the order and forwards the mutation order to all other secondary replicas. Secondary replicas applies mutations as per mutation order and returns back acknowledgement. Any error occurred during this step, results in the request being failed and then retried again by GFS client from step 2.
-
-![GFS Client send Write Request to Primary Replica](/assets/gfs/client-write-request-primary-replica.png)
+3. A write request to the primary replica is sent. The primary replica creates a serialized order of mutation which is called **Mutation Order**. It applies the mutation on its disk according to the order and forwards the mutation order to all other secondary replicas. Secondary replicas applies mutations as per mutation order and returns back acknowledgement. Any error occurred during this step, results in the request being failed and then retried again by GFS client from step 2. ![GFS Client send Write Request to Primary Replica](/assets/gfs/client-write-request-primary-replica.png)
 
 Mutation Order created by the primary replica is applied as is to all the secondary replica. Meaning that the secondary replica will write at the same byte offset as primary replica did.
 
