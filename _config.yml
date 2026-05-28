@@ -24,4 +24,4 @@ plugins:
   - jektex
   - jekyll-feed
 
-google-analytics: G-3GLS5XRWV6
+google_analytics: G-3GLS5XRWV6
