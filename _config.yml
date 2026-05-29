@@ -21,6 +21,7 @@ theme_config:
 
 plugins:
   - jekyll-seo-tag
+  - jekyll-sitemap
   - jektex
   - jekyll-feed
 

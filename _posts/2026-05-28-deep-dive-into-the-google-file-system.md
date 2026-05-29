@@ -1,6 +1,7 @@
 ---
 layout: post
-title:  "Deep Dive into The Google File System"
+title:  "A Deep Dive into The Google File System"
+description: "A comprehensive breakdown of the historic 2003 GFS paper. Learn how Google designed low-cost, fault-tolerant distributed storage at massive scale."
 date:   2026-05-28 15:01:36 +0530
 categories: distriubuted-systems architecture paper
 ---
